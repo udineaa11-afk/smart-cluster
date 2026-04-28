@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// SaaS: Subscription Plans
+model Plan {
+  id            String   @id @default(cuid())
+  name          String   @unique // free, basic, premium, enterprise
+  displayName   String
+  price         Float    @default(0) // monthly price in IDR
+  maxUsers      Int      @default(50)
+  maxNews       Int      @default(100)
+  maxMapBlocks  Int      @default(20)
+  maxCats       Int      @default(50)
+  features      String   // JSON array of allowed feature keys
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  clusterId   String   @unique
+  planId      String
+  status      String   @default("active") // active, past_due, canceled, trial
+  trialEndsAt DateTime?
+  currentPeriodStart DateTime @default(now())
+  currentPeriodEnd   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cluster Cluster @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+  plan    Plan    @relation(fields: [planId], references: [id])
+}
+
+// SaaS: Super Admin (app owner)
+model SuperAdmin {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions SuperAdminSession[]
+}
+
+model SuperAdminSession {
+  id        String   @id @default(cuid())
+  adminId   String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  admin SuperAdmin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
+
+// Multi-tenant hierarchy: Cluster > RW > RT
+model Cluster {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  address     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rws          RW[]
+  news         News[]
+  featureFlags FeatureFlag[]
+  users        User[]
+  cats         Cat[]
+  gateEntries  GateEntry[]
+  mapBlocks    MapBlock[]
+  subscription Subscription?
+}
+
+model RW {
+  id        String   @id @default(cuid())
+  number    String
+  clusterId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cluster Cluster @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+  rts     RT[]
+  users   User[]
+}
+
+model RT {
+  id        String   @id @default(cuid())
+  number    String
+  rwId      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  rw    RW     @relation(fields: [rwId], references: [id], onDelete: Cascade)
+  users User[]
+}
+
+// Authentication & roles
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("warga") // admin, rw_admin, rt_admin, warga, security
+  phone        String?
+  address      String?
+  clusterId    String?
+  rwId         String?
+  rtId         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  cluster     Cluster?    @relation(fields: [clusterId], references: [id])
+  rw          RW?         @relation(fields: [rwId], references: [id])
+  rt          RT?         @relation(fields: [rtId], references: [id])
+  news        News[]
+  gateEntries GateEntry[]
+  sessions    Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Feature Flags per cluster
+model FeatureFlag {
+  id        String   @id @default(cuid())
+  key       String
+  label     String
+  enabled   Boolean  @default(false)
+  clusterId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cluster Cluster @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+
+  @@unique([clusterId, key])
+}
+
+// News / announcements
+model News {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  isPublic  Boolean  @default(true)
+  category  String   @default("general") // general, announcement, event, emergency
+  clusterId String
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cluster Cluster @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+  author  User    @relation(fields: [authorId], references: [id])
+}
+
+// Map blocks (polygons)
+model MapBlock {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  polygon     String   // JSON string of coordinates
+  color       String   @default("#3B82F6")
+  blockType   String   @default("area") // area, facility, park, parking, gate
+  clusterId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cluster Cluster @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+}
+
+// Security gate entries
+model GateEntry {
+  id          String   @id @default(cuid())
+  visitorName String
+  purpose     String
+  vehiclePlate String?
+  photoUrl    String?
+  entryTime   DateTime @default(now())
+  exitTime    DateTime?
+  status      String   @default("in") // in, out
+  clusterId   String
+  recordedBy  String
+
+  cluster    Cluster @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+  recordedByUser User @relation(fields: [recordedBy], references: [id])
+}
+
+// Cat registry
+model Cat {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String?
+  photoUrl    String?
+  latitude    Float
+  longitude   Float
+  status      String   @default("stray") // stray, owned, colony
+  clusterId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cluster Cluster @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+}
