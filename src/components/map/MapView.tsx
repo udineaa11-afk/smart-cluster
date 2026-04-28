@@ -67,22 +67,30 @@ export default function MapView({
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(map);
 
-    if (drawMode && onPointAdd) {
-      map.on("click", (e: L.LeafletMouseEvent) => {
-        onPointAdd(e.latlng.lat, e.latlng.lng);
-      });
-    } else if (onMapClick) {
-      map.on("click", (e: L.LeafletMouseEvent) => {
-        onMapClick(e.latlng.lat, e.latlng.lng);
-      });
-    }
-
     return () => {
       map.remove();
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const handler = (e: L.LeafletMouseEvent) => {
+      if (drawMode && onPointAdd) {
+        onPointAdd(e.latlng.lat, e.latlng.lng);
+      } else if (onMapClick) {
+        onMapClick(e.latlng.lat, e.latlng.lng);
+      }
+    };
+
+    map.on("click", handler);
+    return () => {
+      map.off("click", handler);
+    };
+  }, [drawMode, onPointAdd, onMapClick]);
 
   useEffect(() => {
     const map = mapRef.current;
