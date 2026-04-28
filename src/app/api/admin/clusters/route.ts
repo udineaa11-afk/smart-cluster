@@ -15,7 +15,7 @@ export async function GET() {
       include: {
         subscription: { include: { plan: true } },
         _count: {
-          select: { users: true, news: true, mapBlocks: true, cats: true, gateEntries: true },
+          select: { users: true, news: true, mapBlocks: true, pets: true, gateEntries: true },
         },
       },
       orderBy: { createdAt: "desc" },

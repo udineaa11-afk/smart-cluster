@@ -16,7 +16,7 @@ model Plan {
   maxUsers      Int      @default(50)
   maxNews       Int      @default(100)
   maxMapBlocks  Int      @default(20)
-  maxCats       Int      @default(50)
+  maxPets       Int      @default(50)
   features      String   // JSON array of allowed feature keys
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
@@ -75,7 +75,7 @@ model Cluster {
   news         News[]
   featureFlags FeatureFlag[]
   users        User[]
-  cats         Cat[]
+  pets         Pet[]
   gateEntries  GateEntry[]
   mapBlocks    MapBlock[]
   subscription Subscription?
@@ -200,10 +200,11 @@ model GateEntry {
   recordedByUser User @relation(fields: [recordedBy], references: [id])
 }
 
-// Cat registry
-model Cat {
+// Pet registry
+model Pet {
   id          String   @id @default(cuid())
   name        String
+  petType     String   @default("cat") // cat, dog, bird, fish, rabbit, other
   description String?
   color       String?
   photoUrl    String?

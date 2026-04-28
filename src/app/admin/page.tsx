@@ -47,7 +47,7 @@ export default async function SuperAdminDashboard() {
   return (
     <div className="flex h-screen">
       <AdminSidebar />
-      <main className="flex-1 overflow-y-auto bg-gray-50 p-8">
+      <main className="flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-sm text-gray-600">
@@ -55,7 +55,7 @@ export default async function SuperAdminDashboard() {
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
           {stats.map((stat) => (
             <Card key={stat.label}>
               <div className="flex items-center gap-4">

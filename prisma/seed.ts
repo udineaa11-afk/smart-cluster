@@ -15,7 +15,7 @@ async function main() {
       maxUsers: 20,
       maxNews: 30,
       maxMapBlocks: 5,
-      maxCats: 10,
+      maxPets: 10,
       features: JSON.stringify(["news_wall", "map_builder"]),
     },
   });
@@ -28,12 +28,12 @@ async function main() {
       maxUsers: 100,
       maxNews: 200,
       maxMapBlocks: 30,
-      maxCats: 50,
+      maxPets: 50,
       features: JSON.stringify([
         "news_wall",
         "map_builder",
         "gate_security",
-        "cat_registry",
+        "pet_registry",
       ]),
     },
   });
@@ -46,12 +46,12 @@ async function main() {
       maxUsers: 500,
       maxNews: 1000,
       maxMapBlocks: 100,
-      maxCats: 200,
+      maxPets: 200,
       features: JSON.stringify([
         "news_wall",
         "map_builder",
         "gate_security",
-        "cat_registry",
+        "pet_registry",
         "resident_directory",
         "facility_booking",
         "dues_tracker",
@@ -68,12 +68,12 @@ async function main() {
       maxUsers: 9999,
       maxNews: 9999,
       maxMapBlocks: 9999,
-      maxCats: 9999,
+      maxPets: 9999,
       features: JSON.stringify([
         "news_wall",
         "map_builder",
         "gate_security",
-        "cat_registry",
+        "pet_registry",
         "resident_directory",
         "facility_booking",
         "dues_tracker",
@@ -152,7 +152,7 @@ async function main() {
     { key: "news_wall", label: "Berita & Pengumuman", enabled: true },
     { key: "map_builder", label: "Peta & Blok", enabled: true },
     { key: "gate_security", label: "Keamanan Gerbang", enabled: true },
-    { key: "cat_registry", label: "Registrasi Kucing", enabled: true },
+    { key: "pet_registry", label: "Registrasi Hewan", enabled: true },
     { key: "resident_directory", label: "Direktori Warga", enabled: false },
     { key: "facility_booking", label: "Booking Fasilitas", enabled: false },
     { key: "dues_tracker", label: "Iuran Warga", enabled: false },
@@ -336,10 +336,11 @@ async function main() {
     },
   });
 
-  // Create cats
-  const cats = [
+  // Create pets
+  const pets = [
     {
       name: "Si Oyen",
+      petType: "cat",
       description: "Kucing oranye ramah, sering di taman",
       color: "Oranye",
       latitude: -6.207,
@@ -348,6 +349,7 @@ async function main() {
     },
     {
       name: "Hitam",
+      petType: "cat",
       description: "Kucing hitam, peliharaan Blok A No. 3",
       color: "Hitam",
       latitude: -6.209,
@@ -355,7 +357,26 @@ async function main() {
       status: "owned",
     },
     {
+      name: "Buddy",
+      petType: "dog",
+      description: "Anjing golden retriever, peliharaan Blok B No. 7",
+      color: "Emas",
+      latitude: -6.207,
+      longitude: 106.846,
+      status: "owned",
+    },
+    {
+      name: "Rio",
+      petType: "bird",
+      description: "Burung lovebird, peliharaan Blok A No. 10",
+      color: "Hijau-kuning",
+      latitude: -6.2085,
+      longitude: 106.8465,
+      status: "owned",
+    },
+    {
       name: "Belang",
+      petType: "cat",
       description: "Kucing belang tiga, koloni dekat pos satpam",
       color: "Belang tiga",
       latitude: -6.2098,
@@ -364,9 +385,9 @@ async function main() {
     },
   ];
 
-  for (const cat of cats) {
-    await prisma.cat.create({
-      data: { ...cat, clusterId: cluster.id },
+  for (const pet of pets) {
+    await prisma.pet.create({
+      data: { ...pet, clusterId: cluster.id },
     });
   }
 

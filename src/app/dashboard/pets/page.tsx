@@ -1,17 +1,17 @@
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import CatsClient from "./CatsClient";
+import PetsClient from "./PetsClient";
 
-export default async function CatsPage() {
+export default async function PetsPage() {
   const user = await getCurrentUser();
   if (!user) return null;
 
-  const cats = user.clusterId
-    ? await prisma.cat.findMany({
+  const pets = user.clusterId
+    ? await prisma.pet.findMany({
         where: { clusterId: user.clusterId },
         orderBy: { createdAt: "desc" },
       })
     : [];
 
-  return <CatsClient initialCats={cats} />;
+  return <PetsClient initialPets={pets} />;
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
-import { Plus, X, Users, Newspaper, Map, Cat } from "lucide-react";
+import { Plus, X, Users, Newspaper, Map, PawPrint } from "lucide-react";
 
 interface PlanData {
   id: string;
@@ -14,7 +14,7 @@ interface PlanData {
   maxUsers: number;
   maxNews: number;
   maxMapBlocks: number;
-  maxCats: number;
+  maxPets: number;
   features: string;
   isActive: boolean;
   _count: { subscriptions: number };
@@ -33,7 +33,7 @@ export default function PlansClient({ initialPlans }: PlansClientProps) {
   const [maxUsers, setMaxUsers] = useState("50");
   const [maxNews, setMaxNews] = useState("100");
   const [maxMapBlocks, setMaxMapBlocks] = useState("20");
-  const [maxCats, setMaxCats] = useState("50");
+  const [maxPets, setMaxPets] = useState("50");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -51,12 +51,12 @@ export default function PlansClient({ initialPlans }: PlansClientProps) {
           maxUsers: Number(maxUsers),
           maxNews: Number(maxNews),
           maxMapBlocks: Number(maxMapBlocks),
-          maxCats: Number(maxCats),
+          maxPets: Number(maxPets),
           features: JSON.stringify([
             "news_wall",
             "map_builder",
             "gate_security",
-            "cat_registry",
+            "pet_registry",
           ]),
         }),
       });
@@ -83,7 +83,7 @@ export default function PlansClient({ initialPlans }: PlansClientProps) {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
             Paket Langganan
@@ -156,11 +156,11 @@ export default function PlansClient({ initialPlans }: PlansClientProps) {
                 onChange={(e) => setMaxMapBlocks(e.target.value)}
               />
               <Input
-                id="plan-max-cats"
-                label="Maks. Kucing"
+                id="plan-max-pets"
+                label="Maks. Hewan"
                 type="number"
-                value={maxCats}
-                onChange={(e) => setMaxCats(e.target.value)}
+                value={maxPets}
+                onChange={(e) => setMaxPets(e.target.value)}
               />
             </div>
             <Button type="submit" disabled={loading}>
@@ -223,8 +223,8 @@ export default function PlansClient({ initialPlans }: PlansClientProps) {
                   <span>Maks. {plan.maxMapBlocks} blok peta</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Cat className="h-4 w-4" />
-                  <span>Maks. {plan.maxCats} kucing</span>
+                  <PawPrint className="h-4 w-4" />
+                  <span>Maks. {plan.maxPets} hewan</span>
                 </div>
               </div>
 

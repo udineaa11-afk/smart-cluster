@@ -9,16 +9,16 @@ export async function GET() {
       return NextResponse.json([]);
     }
 
-    const cats = await prisma.cat.findMany({
+    const pets = await prisma.pet.findMany({
       where: { clusterId: cluster.id },
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(cats);
+    return NextResponse.json(pets);
   } catch (error) {
-    console.error("Cats GET error:", error);
+    console.error("Pets GET error:", error);
     return NextResponse.json(
-      { error: "Gagal memuat data kucing" },
+      { error: "Gagal memuat data hewan" },
       { status: 500 }
     );
   }
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, description, color, latitude, longitude, status } = body;
+    const { name, petType, description, color, latitude, longitude, status } = body;
 
     if (!name || latitude === undefined || longitude === undefined) {
       return NextResponse.json(
@@ -41,9 +41,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const cat = await prisma.cat.create({
+    const pet = await prisma.pet.create({
       data: {
         name,
+        petType: petType || "cat",
         description,
         color,
         latitude,
@@ -53,11 +54,11 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(cat, { status: 201 });
+    return NextResponse.json(pet, { status: 201 });
   } catch (error) {
-    console.error("Cats POST error:", error);
+    console.error("Pets POST error:", error);
     return NextResponse.json(
-      { error: "Gagal mendaftarkan kucing" },
+      { error: "Gagal mendaftarkan hewan" },
       { status: 500 }
     );
   }

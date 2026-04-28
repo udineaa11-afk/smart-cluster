@@ -20,9 +20,10 @@ interface MapBlock {
   blockType: string;
 }
 
-interface CatData {
+interface PetData {
   id: string;
   name: string;
+  petType: string;
   description: string | null;
   latitude: number;
   longitude: number;
@@ -32,9 +33,9 @@ interface CatData {
 
 interface PublicMapClientProps {
   blocks: MapBlock[];
-  cats: CatData[];
+  pets: PetData[];
 }
 
-export default function PublicMapClient({ blocks, cats }: PublicMapClientProps) {
-  return <MapView blocks={blocks} cats={cats} />;
+export default function PublicMapClient({ blocks, pets }: PublicMapClientProps) {
+  return <MapView blocks={blocks} pets={pets} />;
 }

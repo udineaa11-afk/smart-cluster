@@ -13,9 +13,10 @@ interface MapBlock {
   blockType: string;
 }
 
-interface CatMarker {
+interface PetMarker {
   id: string;
   name: string;
+  petType?: string;
   description?: string | null;
   latitude: number;
   longitude: number;
@@ -23,9 +24,18 @@ interface CatMarker {
   color?: string | null;
 }
 
+const petTypeEmoji: Record<string, string> = {
+  cat: "🐱",
+  dog: "🐶",
+  bird: "🐦",
+  fish: "🐟",
+  rabbit: "🐰",
+  other: "🐾",
+};
+
 interface MapViewProps {
   blocks?: MapBlock[];
-  cats?: CatMarker[];
+  pets?: PetMarker[];
   center?: [number, number];
   zoom?: number;
   onMapClick?: (lat: number, lng: number) => void;
@@ -36,7 +46,7 @@ interface MapViewProps {
 
 export default function MapView({
   blocks = [],
-  cats = [],
+  pets = [],
   center = [-6.2088, 106.8456],
   zoom = 15,
   onMapClick,
@@ -57,22 +67,30 @@ export default function MapView({
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(map);
 
-    if (drawMode && onPointAdd) {
-      map.on("click", (e: L.LeafletMouseEvent) => {
-        onPointAdd(e.latlng.lat, e.latlng.lng);
-      });
-    } else if (onMapClick) {
-      map.on("click", (e: L.LeafletMouseEvent) => {
-        onMapClick(e.latlng.lat, e.latlng.lng);
-      });
-    }
-
     return () => {
       map.remove();
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const handler = (e: L.LeafletMouseEvent) => {
+      if (drawMode && onPointAdd) {
+        onPointAdd(e.latlng.lat, e.latlng.lng);
+      } else if (onMapClick) {
+        onMapClick(e.latlng.lat, e.latlng.lng);
+      }
+    };
+
+    map.on("click", handler);
+    return () => {
+      map.off("click", handler);
+    };
+  }, [drawMode, onPointAdd, onMapClick]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -100,20 +118,21 @@ export default function MapView({
       }
     });
 
-    cats.forEach((cat) => {
-      const catIcon = L.divIcon({
-        html: `<div style="background:${cat.status === "owned" ? "#10B981" : cat.status === "colony" ? "#F59E0B" : "#6B7280"};color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);">🐱</div>`,
+    pets.forEach((pet) => {
+      const emoji = petTypeEmoji[pet.petType || "cat"] || "🐾";
+      const petIcon = L.divIcon({
+        html: `<div style="background:${pet.status === "owned" ? "#10B981" : pet.status === "colony" ? "#F59E0B" : "#6B7280"};color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);">${emoji}</div>`,
         className: "",
         iconSize: [28, 28],
         iconAnchor: [14, 14],
       });
 
-      const marker = L.marker([cat.latitude, cat.longitude], {
-        icon: catIcon,
+      const marker = L.marker([pet.latitude, pet.longitude], {
+        icon: petIcon,
       }).addTo(map);
 
       marker.bindPopup(
-        `<strong>${cat.name}</strong>${cat.description ? `<br/>${cat.description}` : ""}${cat.color ? `<br/>Warna: ${cat.color}` : ""}<br/>Status: ${cat.status}`
+        `<strong>${pet.name}</strong>${pet.description ? `<br/>${pet.description}` : ""}${pet.color ? `<br/>Warna: ${pet.color}` : ""}<br/>Status: ${pet.status}`
       );
 
       layers.push(marker);
@@ -141,7 +160,7 @@ export default function MapView({
     return () => {
       layers.forEach((layer) => map.removeLayer(layer));
     };
-  }, [blocks, cats, drawnPoints]);
+  }, [blocks, pets, drawnPoints]);
 
   return (
     <div

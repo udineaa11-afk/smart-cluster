@@ -7,8 +7,8 @@ export default async function PetaPage() {
   const blocks = cluster
     ? await prisma.mapBlock.findMany({ where: { clusterId: cluster.id } })
     : [];
-  const cats = cluster
-    ? await prisma.cat.findMany({ where: { clusterId: cluster.id } })
+  const pets = cluster
+    ? await prisma.pet.findMany({ where: { clusterId: cluster.id } })
     : [];
 
   return (
@@ -16,11 +16,11 @@ export default async function PetaPage() {
       <div className="border-b border-gray-200 bg-white px-4 py-3">
         <h1 className="text-lg font-semibold text-gray-900">Peta Klaster</h1>
         <p className="text-sm text-gray-600">
-          Jelajahi area klaster, blok, dan lokasi kucing terdaftar
+          Jelajahi area klaster, blok, dan lokasi hewan terdaftar
         </p>
       </div>
       <div className="flex-1">
-        <PublicMapClient blocks={blocks} cats={cats} />
+        <PublicMapClient blocks={blocks} pets={pets} />
       </div>
     </div>
   );

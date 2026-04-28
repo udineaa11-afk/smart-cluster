@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, displayName, price, maxUsers, maxNews, maxMapBlocks, maxCats, features } = body;
+    const { name, displayName, price, maxUsers, maxNews, maxMapBlocks, maxPets, features } = body;
 
     if (!name || !displayName) {
       return NextResponse.json(
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         maxUsers: maxUsers || 50,
         maxNews: maxNews || 100,
         maxMapBlocks: maxMapBlocks || 20,
-        maxCats: maxCats || 50,
+        maxPets: maxPets || 50,
         features: typeof features === "string" ? features : JSON.stringify(features || []),
       },
     });

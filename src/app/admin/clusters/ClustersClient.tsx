@@ -30,7 +30,7 @@ interface ClusterData {
     users: number;
     news: number;
     mapBlocks: number;
-    cats: number;
+    pets: number;
     gateEntries: number;
   };
 }
@@ -92,7 +92,7 @@ export default function ClustersClient({
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
             Manajemen Klaster
@@ -231,7 +231,7 @@ export default function ClustersClient({
                     <span>{cluster._count.users} pengguna</span>
                     <span>{cluster._count.news} berita</span>
                     <span>{cluster._count.mapBlocks} blok peta</span>
-                    <span>{cluster._count.cats} kucing</span>
+                    <span>{cluster._count.pets} hewan</span>
                     <span>{cluster._count.gateEntries} catatan gerbang</span>
                   </div>
                   <p className="mt-2 text-xs text-gray-400">

@@ -38,7 +38,7 @@ export default async function SettingsPage() {
               Informasi Klaster
             </h2>
             <div className="mt-4 space-y-3">
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-gray-500">Nama:</span>{" "}
                   <span className="font-medium">{cluster.name}</span>
