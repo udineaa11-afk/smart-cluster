@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import Card from "@/components/ui/Card";
-import { Newspaper, Map, Shield, Cat, Users, Flag } from "lucide-react";
+import { Newspaper, Map, Shield, PawPrint, Users, Flag } from "lucide-react";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -16,7 +16,7 @@ export default async function DashboardPage() {
       clusterId
         ? prisma.gateEntry.count({ where: { clusterId, status: "in" } })
         : 0,
-      clusterId ? prisma.cat.count({ where: { clusterId } }) : 0,
+      clusterId ? prisma.pet.count({ where: { clusterId } }) : 0,
       clusterId ? prisma.user.count({ where: { clusterId } }) : 0,
       clusterId
         ? prisma.featureFlag.count({ where: { clusterId, enabled: true } })
@@ -27,7 +27,7 @@ export default async function DashboardPage() {
     { label: "Berita", value: newsCount, icon: Newspaper, color: "text-blue-600 bg-blue-50" },
     { label: "Blok Peta", value: blockCount, icon: Map, color: "text-green-600 bg-green-50" },
     { label: "Tamu Aktif", value: gateCount, icon: Shield, color: "text-yellow-600 bg-yellow-50" },
-    { label: "Kucing", value: catCount, icon: Cat, color: "text-purple-600 bg-purple-50" },
+    { label: "Hewan", value: catCount, icon: PawPrint, color: "text-purple-600 bg-purple-50" },
     { label: "Warga", value: userCount, icon: Users, color: "text-indigo-600 bg-indigo-50" },
     { label: "Fitur Aktif", value: flagCount, icon: Flag, color: "text-pink-600 bg-pink-50" },
   ];
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((stat) => (
           <Card key={stat.label}>
             <div className="flex items-center gap-4">

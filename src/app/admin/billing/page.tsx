@@ -39,7 +39,7 @@ export default async function BillingPage() {
   return (
     <div className="flex h-screen">
       <AdminSidebar />
-      <main className="flex-1 overflow-y-auto bg-gray-50 p-8">
+      <main className="flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-6 lg:p-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Billing</h1>
           <p className="text-sm text-gray-600">
@@ -47,7 +47,7 @@ export default async function BillingPage() {
           </p>
         </div>
 
-        <div className="mb-8 grid gap-4 sm:grid-cols-3">
+        <div className="mb-8 grid gap-3 grid-cols-1 sm:grid-cols-3">
           <Card>
             <p className="text-sm text-gray-600">Pendapatan Bulanan</p>
             <p className="mt-1 text-3xl font-bold text-gray-900">
@@ -76,7 +76,8 @@ export default async function BillingPage() {
             <p className="text-sm text-gray-500">Belum ada langganan</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              {/* Desktop table */}
+              <table className="hidden sm:table w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="pb-3 font-medium text-gray-500">Klaster</th>
@@ -114,6 +115,21 @@ export default async function BillingPage() {
                   ))}
                 </tbody>
               </table>
+              {/* Mobile cards */}
+              <div className="sm:hidden space-y-3">
+                {subscriptions.map((sub) => (
+                  <div key={sub.id} className="rounded-lg border border-gray-100 p-3 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-gray-900">{sub.cluster.name}</span>
+                      <Badge className={statusColor[sub.status] || ""}>
+                        {statusLabel[sub.status] || sub.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600">{sub.plan.displayName} &bull; Rp {sub.plan.price.toLocaleString("id-ID")}</p>
+                    <p className="text-xs text-gray-400">{formatDate(sub.currentPeriodStart)} - {formatDate(sub.currentPeriodEnd)}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </Card>

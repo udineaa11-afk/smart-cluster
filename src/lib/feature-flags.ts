@@ -21,7 +21,7 @@ export const DEFAULT_FEATURES = [
   { key: "news_wall", label: "Berita & Pengumuman" },
   { key: "map_builder", label: "Peta & Blok" },
   { key: "gate_security", label: "Keamanan Gerbang" },
-  { key: "cat_registry", label: "Registrasi Kucing" },
+  { key: "pet_registry", label: "Registrasi Hewan" },
   { key: "resident_directory", label: "Direktori Warga" },
   { key: "facility_booking", label: "Booking Fasilitas" },
   { key: "dues_tracker", label: "Iuran Warga" },

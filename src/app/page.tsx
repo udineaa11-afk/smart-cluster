@@ -7,7 +7,7 @@ import {
   Newspaper,
   Map,
   Shield,
-  Cat,
+  PawPrint,
   Users,
   ArrowRight,
 } from "lucide-react";
@@ -24,9 +24,9 @@ export default async function HomePage() {
     <div>
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:py-20 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">
               Smart Cluster
             </h1>
             <p className="mt-4 text-lg text-blue-100">
@@ -75,9 +75,9 @@ export default async function HomePage() {
               desc: "Pencatatan pengunjung dan akses gerbang digital",
             },
             {
-              icon: Cat,
-              title: "Registrasi Kucing",
-              desc: "Peta kucing terdaftar di lingkungan klaster",
+              icon: PawPrint,
+              title: "Registrasi Hewan",
+              desc: "Peta hewan peliharaan terdaftar di lingkungan klaster",
             },
           ].map((feature) => (
             <Card key={feature.title}>

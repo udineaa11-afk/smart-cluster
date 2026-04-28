@@ -12,7 +12,7 @@ export default async function ClustersPage() {
     include: {
       subscription: { include: { plan: true } },
       _count: {
-        select: { users: true, news: true, mapBlocks: true, cats: true, gateEntries: true },
+        select: { users: true, news: true, mapBlocks: true, pets: true, gateEntries: true },
       },
     },
     orderBy: { createdAt: "desc" },
@@ -23,7 +23,7 @@ export default async function ClustersPage() {
   return (
     <div className="flex h-screen">
       <AdminSidebar />
-      <main className="flex-1 overflow-y-auto bg-gray-50 p-8">
+      <main className="flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-6 lg:p-8">
         <ClustersClient initialClusters={clusters} plans={plans} />
       </main>
     </div>

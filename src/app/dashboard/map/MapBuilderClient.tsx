@@ -25,9 +25,10 @@ interface MapBlock {
   blockType: string;
 }
 
-interface CatData {
+interface PetData {
   id: string;
   name: string;
+  petType: string;
   description: string | null;
   latitude: number;
   longitude: number;
@@ -37,13 +38,13 @@ interface CatData {
 
 interface MapBuilderClientProps {
   initialBlocks: MapBlock[];
-  cats: CatData[];
+  pets: PetData[];
   isAdmin: boolean;
 }
 
 export default function MapBuilderClient({
   initialBlocks,
-  cats,
+  pets,
   isAdmin,
 }: MapBuilderClientProps) {
   const [blocks, setBlocks] = useState(initialBlocks);
@@ -97,7 +98,7 @@ export default function MapBuilderClient({
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Peta Builder</h1>
           <p className="text-sm text-gray-600">
@@ -199,7 +200,7 @@ export default function MapBuilderClient({
             <div style={{ height: "500px" }}>
               <MapView
                 blocks={blocks}
-                cats={cats}
+                pets={pets}
                 drawMode={drawMode}
                 drawnPoints={drawnPoints}
                 onPointAdd={drawMode ? handlePointAdd : undefined}
